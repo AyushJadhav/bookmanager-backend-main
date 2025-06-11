@@ -19,20 +19,25 @@ public class BookService {
         return bookRepository.findAll();
     }
     
-    public Optional<Book> findById(Long id) {
-        return bookRepository.findById(id);
+    public Book getBookById(Long id) {
+        return bookRepository.findById(id).orElse(null);
     }
 
-    public Book save(Book book) {
+    public Book createBook(Book book) {
         return bookRepository.save(book);
     }
 
-    public boolean deleteById(Long id) {
-        if (bookRepository.existsById(id)) {
-            bookRepository.deleteById(id);
-            return true;
-        }
-        return false;
+    public Book updateBook(Long id, Book bookDetails) {
+        Book book = bookRepository.findById(id).orElseThrow();
+        book.setTitle(bookDetails.getTitle());
+        book.setAuthor(bookDetails.getAuthor());
+        book.setId(bookDetails.getId());
+        book.setPublishedDate(bookDetails.getPublishedDate());
+        return bookRepository.save(book);
+    }
+
+    public void deleteBook(Long id) {
+        bookRepository.deleteById(id);
     }
 }
 

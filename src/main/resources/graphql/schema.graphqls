@@ -1,17 +1,23 @@
 type Query {
-    findAllBooks: [Book!]!
-}
-
-type Mutation {
-  createBook(title: String!, author: String!, publishedDate: String!): Book
-  updateBook(id: ID!, title: String!, author: String!, publishedDate: String!): Book
-  deleteBook(id: ID!): Boolean
+  findAllBooks: [Book!]!
+  getBookById(id: ID!): Book
 }
 
 type Book {
-    id: Int
-    title: String
-    author: String
-    publishedDate: String
+  id: ID!
+  title: String!
+  author: String!
+  publishedDate: String!
 }
 
+input BookInput {
+  title: String!
+  author: String!
+  publishedDate: String!
+}
+
+type Mutation {
+  createBook(book: BookInput!): Book
+  updateBook(id: ID!, book: BookInput!): Book
+  deleteBook(id: ID!): Boolean
+}

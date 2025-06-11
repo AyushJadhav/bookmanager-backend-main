@@ -1,20 +1,17 @@
 package com.acme.bookmanagement.controller;
 
 import com.acme.bookmanagement.model.Book;
+import com.acme.bookmanagement.model.BookInput;
 import com.acme.bookmanagement.service.BookService;
 
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
-@RequestMapping("/graphql")
 public class BookController {
 
     private final BookService bookService;
@@ -27,32 +24,36 @@ public class BookController {
     public List<Book> findAllBooks() {
         return bookService.findAll();
     }
-    
-    
- // --- CREATE ---
+
+    @QueryMapping
+    public Book getBookById(@Argument("id") Long id) {
+        return bookService.getBookById(id);
+    }
+
     @MutationMapping
-    public Book createBook(@Argument("title") String title, @Argument("author") String author, @Argument("publishedDate") String publishedDate) {
+    public Book createBook(@Argument("book") BookInput bookInput) {
+        Book book = toBook(null, bookInput);
+        return bookService.createBook(book);
+    }
+
+    @MutationMapping
+    public Book updateBook(@Argument("id") Long id, @Argument("book") BookInput bookInput) {
+        Book book = toBook(id, bookInput);
+        return bookService.updateBook(id, book);
+    }
+
+    @MutationMapping
+    public Boolean deleteBook(@Argument("id") Long id) {
+        bookService.deleteBook(id);
+        return true;
+    }
+
+    private Book toBook(Long id, BookInput input) {
         Book book = new Book();
-        book.setTitle(title);
-        book.setAuthor(author);
-        book.setPublishedDate(LocalDate.parse(publishedDate));
-        return bookService.save(book);
+        if (id != null) book.setId(id);
+        book.setTitle(input.getTitle());
+        book.setAuthor(input.getAuthor());
+        book.setPublishedDate(input.getPublishedDate());
+        return book;
     }
-    
- // --- UPDATE ---
-    @MutationMapping
-    public Book updateBook(@Argument Long id, @Argument String title, @Argument String author, @Argument String publishedDate) {
-        Book book = bookService.findById(id).orElseThrow(() -> new RuntimeException("Book not found"));
-        book.setTitle(title);
-        book.setAuthor(author);
-        book.setPublishedDate(LocalDate.parse(publishedDate));
-        return bookService.save(book);
-    }
-
-    // --- DELETE ---
-    @MutationMapping
-    public boolean deleteBook(@Argument Long id) {
-        return bookService.deleteById(id);
-    }
-
 }
