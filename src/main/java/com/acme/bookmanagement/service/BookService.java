@@ -4,6 +4,7 @@ import com.acme.bookmanagement.model.Book;
 import com.acme.bookmanagement.repository.BookRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,5 +40,11 @@ public class BookService {
     public void deleteBook(Long id) {
         bookRepository.deleteById(id);
     }
+    
+    public List<Book> findBooksByDate(LocalDate date) {
+        //LocalDate date = LocalDate.parse(date2); // Ensure the format is yyyy-MM-dd
+        return bookRepository.findByPublishedDate(date);
+    }
+
 }
 

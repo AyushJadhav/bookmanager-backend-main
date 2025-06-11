@@ -9,6 +9,7 @@ import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -55,5 +56,11 @@ public class BookController {
         book.setAuthor(input.getAuthor());
         book.setPublishedDate(input.getPublishedDate());
         return book;
+    }
+    
+    @QueryMapping
+    public List<Book> findBooksByDate(@Argument("publishedDate") String publishedDate) {
+        LocalDate date = LocalDate.parse(publishedDate);
+        return bookService.findBooksByDate(date);
     }
 }

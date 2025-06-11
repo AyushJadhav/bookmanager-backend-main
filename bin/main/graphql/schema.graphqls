@@ -1,6 +1,7 @@
 type Query {
   findAllBooks: [Book!]!
   getBookById(id: ID!): Book
+  findBooksByDate(publishedDate: String!): [Book!]!
 }
 
 type Book {
