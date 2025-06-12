@@ -7,8 +7,13 @@ type Query {
 type Book {
   id: ID!
   title: String!
-  author: String!
+  author: Author!
   publishedDate: String!
+}
+
+type Author {
+  id: ID!
+  name: String!
 }
 
 input BookInput {
