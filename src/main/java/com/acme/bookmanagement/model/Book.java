@@ -3,6 +3,7 @@ package com.acme.bookmanagement.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 public class Book {
@@ -43,4 +44,21 @@ public class Book {
     public Author getAuthor() { return author; }
 
     public void setAuthor(Author author) { this.author = author; }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Book)) return false;
+        Book book = (Book) o;
+        return Objects.equals(id, book.id) &&
+               Objects.equals(title, book.title) &&
+               Objects.equals(author, book.author) &&
+               Objects.equals(publishedDate, book.publishedDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, author, publishedDate);
+    }
+
 }

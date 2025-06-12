@@ -54,19 +54,23 @@ public class BookController {
         return true;
     }
 
+//    private Book toBook(Long id, BookInput input) {
+//        Book book = new Book();
+//        if (id != null) book.setId(id);
+//        book.setTitle(input.getTitle());
+//        book.setPublishedDate(input.getPublishedDate());
+//
+//        // 🔁 Replace String with actual Author entity
+//        Author author = authorService.getOrCreateAuthor(input.getAuthor());
+//        book.setAuthor(author);
+//
+//        return book;
+//    }
+
     private Book toBook(Long id, BookInput input) {
-        Book book = new Book();
-        if (id != null) book.setId(id);
-        book.setTitle(input.getTitle());
-        book.setPublishedDate(input.getPublishedDate());
-
-        // 🔁 Replace String with actual Author entity
         Author author = authorService.getOrCreateAuthor(input.getAuthor());
-        book.setAuthor(author);
-
-        return book;
+        return new Book(id, input.getTitle(), author, input.getPublishedDate());  // ✅ Uses constructor
     }
-
     @QueryMapping
     public List<Book> findBooksByDate(@Argument("publishedDate") String publishedDate) {
         LocalDate date = LocalDate.parse(publishedDate);

@@ -1,8 +1,9 @@
 package com.acme.bookmanagement.service;
 
+import org.springframework.stereotype.Service;
+
 import com.acme.bookmanagement.model.Author;
 import com.acme.bookmanagement.repository.AuthorRepository;
-import org.springframework.stereotype.Service;
 
 @Service
 public class AuthorService {

@@ -7,7 +7,14 @@ public class BookInput {
     private String author;
     private LocalDate publishedDate;
 
-    // Getters and Setters
+    public BookInput() {}
+
+    public BookInput(String title, String author, LocalDate publishedDate) {
+        this.title = title;
+        this.author = author;
+        this.publishedDate = publishedDate;
+    }
+
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
 

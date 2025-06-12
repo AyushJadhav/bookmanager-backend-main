@@ -1,11 +1,12 @@
 package com.acme.bookmanagement.repository;
 
+import com.acme.bookmanagement.model.Author;
 import com.acme.bookmanagement.model.Book;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
@@ -19,31 +20,43 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class BookRepositoryTest {
 
     @Autowired
-    private BookRepository repo;
+    private BookRepository bookRepo;
 
+    @Autowired
+    private AuthorRepository authorRepo;  // Inject Author repo to save author entity
+
+    private Author author;
     private Book book;
 
     @BeforeEach
-    public void setUp() {
-        book = new Book(null,
-                "title-1",
-                "author-1",
-                LocalDate.of(2021, 2, 3));
-        book = repo.save(book);
+    void setUp() {
+        author = new Author();
+        author.setName("author-1");
+        author = authorRepo.save(author);  // save author first
+
+        book = new Book();
+        book.setTitle("title-1");
+        book.setAuthor(author);  // assign author entity
+        book.setPublishedDate(LocalDate.of(2021, 2, 3));
+        book = bookRepo.save(book);  // save book
     }
 
     @AfterEach
-    public void tearDown() {
-        repo.delete(book);
+    void tearDown() {
+        bookRepo.deleteAll();
+        authorRepo.deleteAll();
     }
 
     @Test
     void testSavedBookCanBeFoundById() {
-        Book savedBook = repo.findById(book.getId()).orElse(null);
+        Book savedBook = bookRepo.findById(book.getId()).orElse(null);
 
         assertNotNull(savedBook);
-        assertEquals(book.getAuthor(), savedBook.getAuthor());
         assertEquals(book.getTitle(), savedBook.getTitle());
         assertEquals(book.getPublishedDate(), savedBook.getPublishedDate());
+
+        // Check author object equality (could compare id or name)
+        assertNotNull(savedBook.getAuthor());
+        assertEquals(author.getName(), savedBook.getAuthor().getName());
     }
 }
