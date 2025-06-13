@@ -38,6 +38,7 @@ public class BookController {
 
     @MutationMapping
     public Book createBook(@Argument("book") BookInput bookInput) {
+    	 System.out.println("Received date: " + bookInput.getPublishedDate()); 
         Book book = toBook(null, bookInput);
         return bookService.createBook(book);
     }
@@ -57,7 +58,7 @@ public class BookController {
 
     private Book toBook(Long id, BookInput input) {
         Author author = authorService.getOrCreateAuthor(input.getAuthor());
-        return new Book(id, input.getTitle(), author, input.getPublishedDate());  // ✅ Uses constructor
+        return new Book(id, input.getTitle(), author, input.getPublishedDate());  
     }
     @QueryMapping
     public List<Book> findBooksByDate(@Argument("publishedDate") String publishedDate) {
